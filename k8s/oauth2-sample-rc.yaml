@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: oauth2-sample-rc
+spec:
+  replicas: 1
+  selector:
+    app: oauth2-sample
+  template:
+    metadata:
+      name: somename
+      labels:
+        app: oauth2-sample
+    spec:
+      containers:
+      - name: oauth2-sample
+        image: ajanthan/oauth2-sample:latest
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: app-config 
+          mountPath: "/config" 
+          readOnly: true
+      volumes:
+      - name: app-config
+        configMap:
+          name: app-config
+          items:
+          - key: application.properties
+            path: application.properties
